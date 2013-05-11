@@ -2916,8 +2916,8 @@ public final class Verify extends Assert
                 Assert.fail("Neither item should be null: <" + objectA + "> <" + objectB + '>');
             }
 
-            Assert.assertFalse("Neither item should equal null", objectA.equals(null));
-            Assert.assertFalse("Neither item should equal null", objectB.equals(null));
+            Assert.assertNotNull("Neither item should equal null", objectA);
+            Assert.assertNotNull("Neither item should equal null", objectB);
             Verify.assertNotEquals("Neither item should equal new Object()", objectA.equals(new Object()));
             Verify.assertNotEquals("Neither item should equal new Object()", objectB.equals(new Object()));
             Assert.assertEquals("Expected " + itemNames + " to be equal.", objectA, objectA);
