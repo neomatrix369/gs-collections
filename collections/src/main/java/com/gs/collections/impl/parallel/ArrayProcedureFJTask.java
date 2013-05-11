@@ -50,7 +50,7 @@ public final class ArrayProcedureFJTask<T, BT extends Procedure<? super T>> impl
             this.procedure = this.procedureFactory.create();
             ArrayIterate.forEach(this.array, this.start, this.end - 1, this.procedure);
         }
-        catch (Throwable newError)
+        catch (Exception newError)
         {
             this.taskRunner.setFailed(newError);
         }

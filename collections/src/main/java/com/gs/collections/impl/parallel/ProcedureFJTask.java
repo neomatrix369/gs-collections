@@ -70,7 +70,7 @@ public final class ProcedureFJTask<T, BT extends Procedure<? super T>> implement
                 ListIterate.forEach(this.list, this.start, stop, this.procedure);
             }
         }
-        catch (Throwable newError)
+        catch (Exception newError)
         {
             this.taskRunner.setFailed(newError);
         }

@@ -70,7 +70,7 @@ public final class ObjectIntProcedureFJTask<T, BT extends ObjectIntProcedure<? s
                 ListIterate.forEachWithIndex(this.list, this.start, stop, this.procedure);
             }
         }
-        catch (Throwable newError)
+        catch (Exception newError)
         {
             this.taskRunner.setFailed(newError);
         }

@@ -68,7 +68,7 @@ public class FJListObjectIntProcedureTask<T, PT extends ObjectIntProcedure<? sup
                 ListIterate.forEachWithIndex(this.list, this.start, this.end, this.procedure);
             }
         }
-        catch (Throwable newError)
+        catch (Exception newError)
         {
             this.taskRunner.setFailed(newError);
         }

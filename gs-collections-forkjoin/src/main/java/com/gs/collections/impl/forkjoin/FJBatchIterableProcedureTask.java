@@ -55,7 +55,7 @@ public class FJBatchIterableProcedureTask<T, PT extends Procedure<? super T>> ex
             this.procedure = this.procedureFactory.create();
             this.iterable.batchForEach(this.procedure, this.sectionIndex, this.sectionCount);
         }
-        catch (Throwable newError)
+        catch (Exception newError)
         {
             this.taskRunner.setFailed(newError);
         }
