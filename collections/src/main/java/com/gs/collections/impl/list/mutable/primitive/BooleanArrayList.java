@@ -27,7 +27,10 @@ import com.gs.collections.api.BooleanIterable;
 import com.gs.collections.api.LazyBooleanIterable;
 import com.gs.collections.api.bag.primitive.MutableBooleanBag;
 import com.gs.collections.api.block.function.primitive.BooleanToObjectFunction;
+import com.gs.collections.api.block.function.primitive.ObjectBooleanIntToObjectFunction;
+import com.gs.collections.api.block.function.primitive.ObjectBooleanToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.BooleanPredicate;
+import com.gs.collections.api.block.procedure.primitive.BooleanIntProcedure;
 import com.gs.collections.api.block.procedure.primitive.BooleanProcedure;
 import com.gs.collections.api.iterator.BooleanIterator;
 import com.gs.collections.api.list.MutableList;
@@ -36,6 +39,7 @@ import com.gs.collections.api.list.primitive.ImmutableBooleanList;
 import com.gs.collections.api.list.primitive.MutableBooleanList;
 import com.gs.collections.api.set.primitive.MutableBooleanSet;
 import com.gs.collections.impl.bag.mutable.primitive.BooleanHashBag;
+import com.gs.collections.impl.factory.primitive.BooleanLists;
 import com.gs.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
 import com.gs.collections.impl.list.mutable.FastList;
 import com.gs.collections.impl.set.mutable.primitive.BooleanHashSet;
@@ -43,13 +47,14 @@ import net.jcip.annotations.NotThreadSafe;
 
 /**
  * BooleanArrayList is similar to {@link FastList}, and is memory-optimized for boolean primitives.
+ *
+ * @since 3.0.
  */
 @NotThreadSafe
 public final class BooleanArrayList
         implements MutableBooleanList, Externalizable
 {
     private static final long serialVersionUID = 1L;
-
     private int size;
     private transient BitSet items;
 
@@ -320,12 +325,12 @@ public final class BooleanArrayList
     public boolean removeAll(BooleanIterable source)
     {
         boolean modified = false;
-        BooleanIterator iterator = source.booleanIterator();
-        while (iterator.hasNext())
+        for (int i = 0; i < this.size; i++)
         {
-            boolean item = iterator.next();
-            if (this.remove(item))
+            if (source.contains(this.items.get(i)))
             {
+                this.removeAtIndex(i);
+                i--;
                 modified = true;
             }
         }
@@ -334,12 +339,43 @@ public final class BooleanArrayList
 
     public boolean removeAll(boolean... source)
     {
-        boolean modified = false;
-        for (boolean i : source)
+        if (this.isEmpty() || source.length == 0)
         {
-            modified = this.remove(i);
+            return false;
         }
-        return modified;
+        BooleanHashSet set = BooleanHashSet.newSetWith(source);
+        if (set.size() == 2)
+        {
+            this.items = null;
+            this.size = 0;
+            return true;
+        }
+        int oldSize = this.size;
+        int trueCount = this.getTrueCount();
+        if (set.contains(true))
+        {
+            this.size -= trueCount;
+            this.items.set(0, this.size, false);
+        }
+        else
+        {
+            this.size = trueCount;
+            this.items.set(0, this.size, true);
+        }
+        return oldSize != this.size;
+    }
+
+    private int getTrueCount()
+    {
+        int count = 0;
+        for (int i = 0; i < this.size; i++)
+        {
+            if (this.items.get(i))
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     public boolean removeAtIndex(int index)
@@ -423,6 +459,34 @@ public final class BooleanArrayList
         {
             procedure.value(this.items.get(i));
         }
+    }
+
+    public void forEachWithIndex(BooleanIntProcedure procedure)
+    {
+        for (int i = 0; i < this.size; i++)
+        {
+            procedure.value(this.items.get(i), i);
+        }
+    }
+
+    public <T> T injectInto(T injectedValue, ObjectBooleanToObjectFunction<? super T, ? extends T> function)
+    {
+        T result = injectedValue;
+        for (int i = 0; i < this.size; i++)
+        {
+            result = function.valueOf(result, this.items.get(i));
+        }
+        return result;
+    }
+
+    public <T> T injectIntoWithIndex(T injectedValue, ObjectBooleanIntToObjectFunction<? super T, ? extends T> function)
+    {
+        T result = injectedValue;
+        for (int i = 0; i < this.size; i++)
+        {
+            result = function.valueOf(result, this.items.get(i), i);
+        }
+        return result;
     }
 
     public int count(BooleanPredicate predicate)
@@ -521,17 +585,25 @@ public final class BooleanArrayList
 
     public MutableBooleanList asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new UnmodifiableBooleanList(this);
     }
 
     public MutableBooleanList asSynchronized()
     {
-        throw new UnsupportedOperationException("asSynchronized not implemented yet");
+        return new SynchronizedBooleanList(this);
     }
 
     public ImmutableBooleanList toImmutable()
     {
-        throw new UnsupportedOperationException("toImmutable not implemented yet");
+        if (this.size == 0)
+        {
+            return BooleanLists.immutable.with();
+        }
+        if (this.size == 1)
+        {
+            return BooleanLists.immutable.with(this.items.get(0));
+        }
+        return BooleanLists.immutable.with(this.toArray());
     }
 
     public BooleanArrayList toReversed()
@@ -984,40 +1056,6 @@ public final class BooleanArrayList
         public MutableBooleanBag toBag()
         {
             return BooleanHashBag.newBag(this);
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return BooleanArrayList.this.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object otherIterable)
-        {
-            if (otherIterable == this)
-            {
-                return true;
-            }
-            if (!(otherIterable instanceof ReverseBooleanIterable))
-            {
-                return false;
-            }
-            ReverseBooleanIterable reverseBooleanIterable = (ReverseBooleanIterable) otherIterable;
-            if (this.size() != reverseBooleanIterable.size())
-            {
-                return false;
-            }
-            BooleanIterator iterator = this.booleanIterator();
-            BooleanIterator otherIterator = this.booleanIterator();
-            while (iterator.hasNext())
-            {
-                if (iterator.next() != otherIterator.next())
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         private class ReverseBooleanIterator implements BooleanIterator

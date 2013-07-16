@@ -161,7 +161,7 @@ public class Synchronized<name>StackTest
         Verify.assertSize(3, this.stack);
         Assert.assertTrue(this.stack.containsAll(<["1", "2", "3"]:(literal.(type))(); separator=", ">));
     }
-     
+
     @Test
     public void newStack()
     {
@@ -247,7 +247,7 @@ public class Synchronized<name>StackTest
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void iterator_throws_non_empty_list()
+    public void iterator_throws_non_empty_stack()
     {
         Mutable<name>Stack stack1 = new Synchronized<name>Stack(new <name>ArrayStack());
         stack1.push(<(literal.(type))("1")>);
@@ -541,6 +541,14 @@ public class Synchronized<name>StackTest
     {
         Mutable<name>Stack stack1 = new Synchronized<name>Stack(<name>ArrayStack.newStackWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">), new Object());
         Assert.assertEquals(stack1, stack1.asSynchronized());
+        Assert.assertSame(stack1, stack1.asSynchronized());
+    }
+
+    @Test
+    public void asUnmodifiable()
+    {
+        Verify.assertInstanceOf(Unmodifiable<name>Stack.class, this.stack.asUnmodifiable());
+        Assert.assertEquals(new Unmodifiable<name>Stack(this.stack), this.stack.asUnmodifiable());
     }
 }
 

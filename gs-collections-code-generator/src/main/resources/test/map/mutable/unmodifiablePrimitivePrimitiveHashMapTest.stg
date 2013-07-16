@@ -32,10 +32,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This file was automatically generated from template file unmodifiablePrimitivePrimitiveHashMapTest.stg.
  * JUnit test for {@link Unmodifiable<name1><name2>HashMap}.
+ * This file was automatically generated from template file unmodifiablePrimitivePrimitiveHashMapTest.stg.
  */
-public class Unmodifiable<name1><name2>HashMapTest extends Abstract<name1><name2>HashMapTestCase
+public class Unmodifiable<name1><name2>HashMapTest extends Abstract<name1><name2>MapTestCase
 {
     private final Unmodifiable<name1><name2>HashMap map = this.classUnderTest();
 
@@ -68,7 +68,7 @@ public class Unmodifiable<name1><name2>HashMapTest extends Abstract<name1><name2
     {
         return new Unmodifiable<name1><name2>HashMap(new <name1><name2>HashMap(4).withKeysValues(key1, value1, key2, value2, key3, value3, key4, value4));
     }
-         
+
     @Override
     protected Unmodifiable<name1><name2>HashMap getEmptyMap()
     {
@@ -135,7 +135,7 @@ public class Unmodifiable<name1><name2>HashMapTest extends Abstract<name1><name2
     @Test(expected = UnsupportedOperationException.class)
     public void putDuplicateWithRemovedSlot()
     {
-        <type1> collision1 = Abstract<name1><name2>HashMapTestCase.generateCollisions().getFirst();
+        <type1> collision1 = Abstract<name1><name2>MapTestCase.generateCollisions().getFirst();
 
         Unmodifiable<name1><name2>HashMap hashMap = this.getEmptyMap();
         hashMap.put(collision1, <(literal.(type2))("1")>);
@@ -341,6 +341,15 @@ public class Unmodifiable<name1><name2>HashMapTest extends Abstract<name1><name2
         Assert.assertEquals(3, this.newWithKeysValues(<(literal.(type1))("1")>, <(literal.(type2))("1")>, <keyValue("0")>, <(literal.(type1))("5")>, <(literal.(type2))("5")>).size());
         Assert.assertEquals(2, this.newWithKeysValues(<(literal.(type1))("6")>, <(literal.(type2))("6")>, <(literal.(type1))("5")>, <(literal.(type2))("5")>).size());
         Verify.assertSize(3, this.map);
+    }
+
+    @Override
+    @Test
+    public void asUnmodifiable()
+    {
+        Verify.assertInstanceOf(Unmodifiable<name1><name2>HashMap.class, this.map.asUnmodifiable());
+        Assert.assertEquals(new Unmodifiable<name1><name2>HashMap(this.map), this.map.asUnmodifiable());
+        Assert.assertSame(this.map, this.map.asUnmodifiable());
     }
 }
 

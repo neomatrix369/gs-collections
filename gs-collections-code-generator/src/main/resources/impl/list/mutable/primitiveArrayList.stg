@@ -27,8 +27,11 @@ import com.gs.collections.api.<name>Iterable;
 import com.gs.collections.api.Lazy<name>Iterable;
 import com.gs.collections.api.RichIterable;
 import com.gs.collections.api.bag.primitive.Mutable<name>Bag;
+import com.gs.collections.api.block.function.primitive.Object<name>IntToObjectFunction;
+import com.gs.collections.api.block.function.primitive.Object<name>ToObjectFunction;
 import com.gs.collections.api.block.function.primitive.<name>ToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.<name>Predicate;
+import com.gs.collections.api.block.procedure.primitive.<name>IntProcedure;
 import com.gs.collections.api.block.procedure.primitive.<name>Procedure;
 import com.gs.collections.api.iterator.<name>Iterator;
 import com.gs.collections.api.list.MutableList;
@@ -37,14 +40,15 @@ import com.gs.collections.api.list.primitive.Immutable<name>List;
 import com.gs.collections.api.list.primitive.Mutable<name>List;
 import com.gs.collections.api.set.primitive.Mutable<name>Set;
 import com.gs.collections.impl.bag.mutable.primitive.<name>HashBag;
+import com.gs.collections.impl.factory.primitive.<name>Lists;
 import com.gs.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
 import com.gs.collections.impl.list.mutable.FastList;
 import com.gs.collections.impl.set.mutable.primitive.<name>HashSet;
 import net.jcip.annotations.NotThreadSafe;
 
 /**
- * This file was automatically generated from template file primitiveArrayList.stg.
  * <name>ArrayList is similar to {@link FastList}, and is memory-optimized for <type> primitives.
+ * This file was automatically generated from template file primitiveArrayList.stg.
  *
  * @since 3.0.
  */
@@ -56,7 +60,6 @@ public final class <name>ArrayList
     private static final <type>[] DEFAULT_SIZED_EMPTY_ARRAY = {};
     private static final <type>[] ZERO_SIZED_ARRAY = {};
     private static final int MAXIMUM_ARRAY_SIZE = Integer.MAX_VALUE - 8;
-
     private int size;
     private transient <type>[] items = DEFAULT_SIZED_EMPTY_ARRAY;
 
@@ -148,7 +151,7 @@ public final class <name>ArrayList
 
     public boolean containsAll(<name>Iterable source)
     {
-        for (<name>Iterator iterator = source.<type>Iterator(); iterator.hasNext();)
+        for (<name>Iterator iterator = source.<type>Iterator(); iterator.hasNext(); )
         {
             if (!this.contains(iterator.next()))
             {
@@ -383,12 +386,12 @@ public final class <name>ArrayList
     public boolean removeAll(<name>Iterable source)
     {
         boolean modified = false;
-        <name>Iterator iterator = source.<type>Iterator();
-        while (iterator.hasNext())
+        for (int index = 0; index \< this.size; index++)
         {
-            <type> item = iterator.next();
-            if (this.remove(item))
+            if (source.contains(this.get(index)))
             {
+                this.removeAtIndex(index);
+                index--;
                 modified = true;
             }
         }
@@ -397,15 +400,21 @@ public final class <name>ArrayList
 
     public boolean removeAll(<type>... source)
     {
-        boolean modified = false;
-        for (<type> i : source)
+        <name>HashSet set = <name>HashSet.newSetWith(source);
+        <type>[] newItems = new <type>[this.size];
+        int count = 0;
+        int oldSize = this.size;
+        for (int index = 0; index \< this.size; index++)
         {
-            if (this.remove(i))
+            if (!set.contains(this.items[index]))
             {
-                modified = true;
+                newItems[count] = this.items[index];
+                count++;
             }
         }
-        return modified;
+        this.items = newItems;
+        this.size = count;
+        return oldSize != this.size;
     }
 
     public <type> removeAtIndex(int index)
@@ -494,6 +503,34 @@ public final class <name>ArrayList
         {
             procedure.value(this.items[i]);
         }
+    }
+
+    public void forEachWithIndex(<name>IntProcedure procedure)
+    {
+        for (int i = 0; i \< this.size; i++)
+        {
+            procedure.value(this.items[i], i);
+        }
+    }
+
+    public \<T> T injectInto(T injectedValue, Object<name>ToObjectFunction\<? super T, ? extends T> function)
+    {
+        T result = injectedValue;
+        for (int i = 0; i \< this.size; i++)
+        {
+            result = function.valueOf(result, this.items[i]);
+        }
+        return result;
+    }
+
+    public \<T> T injectIntoWithIndex(T injectedValue, Object<name>IntToObjectFunction\<? super T, ? extends T> function)
+    {
+        T result = injectedValue;
+        for (int i = 0; i \< this.size; i++)
+        {
+            result = function.valueOf(result, this.items[i], i);
+        }
+        return result;
     }
 
     public int count(<name>Predicate predicate)
@@ -658,6 +695,20 @@ public final class <name>ArrayList
             result += this.items[i];
         }
         return result;
+    }
+
+    public <wideType.(type)> dotProduct(<name>List list)
+    {
+        if (this.size != list.size())
+        {
+            throw new IllegalArgumentException("Lists used in dotProduct must be the same size");
+        }
+        <wideType.(type)> sum = <wideZero.(type)>;
+        for (int i = 0; i \< this.size; i++)
+        {
+            sum += <castWideType.(type)>this.items[i] * list.get(i);
+        }
+        return sum;
     }
 
     public double average()
@@ -834,7 +885,15 @@ public final class <name>ArrayList
 
     public Immutable<name>List toImmutable()
     {
-        throw new UnsupportedOperationException("toImmutable not implemented yet");
+        if (this.items.length == 0)
+        {
+            return <name>Lists.immutable.with();
+        }
+        if (this.items.length == 1)
+        {
+            return <name>Lists.immutable.with(this.items[0]);
+        }
+        return <name>Lists.immutable.with(this.toArray());
     }
 
     public void writeExternal(ObjectOutput out) throws IOException
@@ -1230,7 +1289,6 @@ public final class <name>ArrayList
             }
         }
     }
-
 }
 
 >>

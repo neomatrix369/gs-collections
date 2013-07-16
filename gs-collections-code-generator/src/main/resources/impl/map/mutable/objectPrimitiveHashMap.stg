@@ -32,6 +32,7 @@ import com.gs.collections.api.block.function.primitive.<name>Function;
 import com.gs.collections.api.block.function.primitive.<name>Function0;
 import com.gs.collections.api.block.function.primitive.<name>To<name>Function;
 import com.gs.collections.api.block.function.primitive.<name>ToObjectFunction;
+import com.gs.collections.api.block.function.primitive.Object<name>ToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.<name>Predicate;
 import com.gs.collections.api.block.predicate.primitive.Object<name>Predicate;
 import com.gs.collections.api.block.procedure.Procedure;
@@ -203,12 +204,12 @@ public class Object<name>HashMap\<K> implements MutableObject<name>Map\<K>, Exte
 
     public MutableObject<name>Map\<K> asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new UnmodifiableObject<name>Map\<K>(this);
     }
 
     public MutableObject<name>Map\<K> asSynchronized()
     {
-        return new SynchronizedObject<name>HashMap\<K>(this);
+        return new SynchronizedObject<name>Map\<K>(this);
     }
 
     public ImmutableObject<name>Map\<K> toImmutable()
@@ -813,6 +814,21 @@ public class Object<name>HashMap\<K> implements MutableObject<name>Map\<K>, Exte
                 result.add(function.valueOf(this.values[i]));
             }
         }
+        return result;
+    }
+
+    public \<V> V injectInto(V injectedValue, Object<name>ToObjectFunction\<? super V, ? extends V> function)
+    {
+        V result = injectedValue;
+
+        for (int i = 0; i \< this.keys.length; i++)
+        {
+            if (isNonSentinel(this.keys[i]))
+            {
+                result = function.valueOf(result, this.values[i]);
+            }
+        }
+
         return result;
     }
 

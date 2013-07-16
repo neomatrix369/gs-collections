@@ -132,6 +132,17 @@ wideType ::= [
     default: "no matching wide type"
 ]
 
+castWideType ::= [
+    "byte": "(long) ",
+    "short": "(long) ",
+    "char": "(long) ",
+    "int": "(long) ",
+    "long": "",
+    "float": "(double) ",
+    "double": "",
+    default: "no matching wide type"
+]
+
 castDouble ::= [
     "byte": "(double) ",
     "short": "(double) ",
@@ -266,4 +277,18 @@ cast ::= [
     "float": "floatCast",
     "double": "doubleCast",
     default: "no matching cast"
+]
+
+article ::= [
+    "int": "an",
+    default: "a"
+]
+
+castIntToPrimitiveTypes ::= [
+    "byte": "(byte) ",
+    "short": "(short) ",
+    "char": "(char) ",
+    "float": "(float) ",
+    "double": "(double) ",
+    default: ""
 ]

@@ -49,7 +49,9 @@ import com.gs.collections.api.set.primitive.Mutable<name2>Set;
  * This file was automatically generated from template file unmodifiablePrimitivePrimitiveHashMap.stg.
  *
  * @since 3.1.
+ * @deprecated since 3.2. Use {@link Unmodifiable<name1><name2>Map} instead.
  */
+@Deprecated
 public final class Unmodifiable<name1><name2>HashMap
         implements Mutable<name1><name2>Map, Serializable
 {
@@ -293,7 +295,7 @@ public final class Unmodifiable<name1><name2>HashMap
 
     public Mutable<name1><name2>Map asSynchronized()
     {
-        return new Synchronized<name1><name2>HashMap(this);
+        return new Synchronized<name1><name2>Map(this);
     }
 
     public Immutable<name1><name2>Map toImmutable()

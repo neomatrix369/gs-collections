@@ -20,6 +20,7 @@ package com.gs.collections.impl.map.mutable.primitive;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -61,15 +62,22 @@ import com.gs.collections.api.tuple.Pair;
 import net.jcip.annotations.GuardedBy;
 
 /**
+ * A synchronized view of a {@link Mutable<name>ObjectMap}. It is imperative that the user manually synchronize on the collection when iterating over it using the
+ * standard JDK iterator or JDK 5 for loop, as per {@link Collections#synchronizedCollection(Collection)}.
+ * \<p>
  * This file was automatically generated from template file synchronizedPrimitiveObjectHashMap.stg.
+ * \</p>
  *
+ * @see Mutable<name>ObjectMap#asSynchronized()
+ * @see MutableMap#asSynchronized()
  * @since 3.1.
+ * @deprecated since 3.2. Use {@link Synchronized<name>ObjectMap} instead.
  */
+@Deprecated
 public final class Synchronized<name>ObjectHashMap\<V>
         implements Mutable<name>ObjectMap\<V>, Serializable
 {
     private static final long serialVersionUID = 1L;
-
     private final Object lock;
     @GuardedBy("this.lock")
     private final Mutable<name>ObjectMap\<V> map;
@@ -893,7 +901,7 @@ public final class Synchronized<name>ObjectHashMap\<V>
 
     public Mutable<name>ObjectMap\<V> asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new Unmodifiable<name>ObjectMap\<V>(this);
     }
 
     public Mutable<name>ObjectMap\<V> asSynchronized()
@@ -930,9 +938,11 @@ public final class Synchronized<name>ObjectHashMap\<V>
         }
     }
 
+    /**
+     * Must be called in a synchronized block.
+     */
     public Iterator\<V> iterator()
     {
-        // this must be manually synchronized by developer
         return this.map.iterator();
     }
 }

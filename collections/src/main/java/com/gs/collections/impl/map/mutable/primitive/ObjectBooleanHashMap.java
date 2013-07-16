@@ -31,6 +31,7 @@ import com.gs.collections.api.block.function.primitive.BooleanFunction;
 import com.gs.collections.api.block.function.primitive.BooleanFunction0;
 import com.gs.collections.api.block.function.primitive.BooleanToBooleanFunction;
 import com.gs.collections.api.block.function.primitive.BooleanToObjectFunction;
+import com.gs.collections.api.block.function.primitive.ObjectBooleanToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.BooleanPredicate;
 import com.gs.collections.api.block.predicate.primitive.ObjectBooleanPredicate;
 import com.gs.collections.api.block.procedure.Procedure;
@@ -135,12 +136,12 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
 
     public MutableObjectBooleanMap<K> asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new UnmodifiableObjectBooleanMap<K>(this);
     }
 
     public MutableObjectBooleanMap<K> asSynchronized()
     {
-        throw new UnsupportedOperationException("asSynchronized not implemented yet");
+        return new SynchronizedObjectBooleanMap<K>(this);
     }
 
     public ImmutableObjectBooleanMap<K> toImmutable()
@@ -606,6 +607,21 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
                 result.put(this.toNonSentinel(this.keys[i]), this.values.get(i));
             }
         }
+        return result;
+    }
+
+    public <V> V injectInto(V injectedValue, ObjectBooleanToObjectFunction<? super V, ? extends V> function)
+    {
+        V result = injectedValue;
+
+        for (int i = 0; i < this.keys.length; i++)
+        {
+            if (isNonSentinel(this.keys[i]))
+            {
+                result = function.valueOf(result, this.values.get(i));
+            }
+        }
+
         return result;
     }
 

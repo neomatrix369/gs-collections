@@ -17,6 +17,7 @@
 package com.gs.collections.impl.map.mutable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,9 +44,10 @@ import com.gs.collections.impl.utility.Iterate;
 import com.gs.collections.impl.utility.LazyIterate;
 
 /**
- * A synchronized view of a Map.
+ * A synchronized view of a {@link MutableMap}. It is imperative that the user manually synchronize on the collection when iterating over it using the
+ * standard JDK iterator or JDK 5 for loop, as per {@link Collections#synchronizedCollection(Collection)}.
  *
- * @see SynchronizedMutableMap#of(Map)
+ * @see MutableMap#asSynchronized()
  */
 public class SynchronizedMutableMap<K, V>
         extends SynchronizedMapIterable<K, V> implements MutableMap<K, V>

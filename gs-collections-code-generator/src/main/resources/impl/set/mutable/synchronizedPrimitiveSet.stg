@@ -16,10 +16,14 @@ body(type, name) ::= <<
 
 package com.gs.collections.impl.set.mutable.primitive;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.gs.collections.api.<name>Iterable;
 import com.gs.collections.api.Lazy<name>Iterable;
 import com.gs.collections.api.block.function.primitive.<name>ToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.<name>Predicate;
+import com.gs.collections.api.iterator.<name>Iterator;
 import com.gs.collections.api.set.MutableSet;
 import com.gs.collections.api.set.primitive.Immutable<name>Set;
 import com.gs.collections.api.set.primitive.Mutable<name>Set;
@@ -29,8 +33,14 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 /**
+ * A synchronized view of a {@link Mutable<name>Set}. It is imperative that the user manually synchronize on the collection when iterating over it using the
+ * {@link <name>Iterator}, as per {@link Collections#synchronizedCollection(Collection)}.
+ * \<p>
  * This file was automatically generated from template file synchronizedPrimitiveSet.stg.
+ * \</p>
  *
+ * @see Mutable<name>Set#asSynchronized()
+ * @see MutableSet#asSynchronized()
  * @since 3.1.
  */
 @ThreadSafe
@@ -144,7 +154,7 @@ public final class Synchronized<name>Set
 
     public Mutable<name>Set asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new Unmodifiable<name>Set(this);
     }
 
     public Mutable<name>Set asSynchronized()

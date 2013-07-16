@@ -31,10 +31,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This file was automatically generated from template file unmodifiablePrimitiveBooleanHashMapTest.stg.
  * JUnit test for {@link Unmodifiable<name>BooleanHashMap}.
+ * This file was automatically generated from template file unmodifiablePrimitiveBooleanHashMapTest.stg.
  */
-public class Unmodifiable<name>BooleanHashMapTest extends Abstract<name>BooleanHashMapTestCase
+public class Unmodifiable<name>BooleanHashMapTest extends Abstract<name>BooleanMapTestCase
 {
     private final Unmodifiable<name>BooleanHashMap map = this.classUnderTest();
 
@@ -67,7 +67,7 @@ public class Unmodifiable<name>BooleanHashMapTest extends Abstract<name>BooleanH
     {
         return new Unmodifiable<name>BooleanHashMap(new <name>BooleanHashMap(4).withKeysValues(key1, value1, key2, value2, key3, value3, key4, value4));
     }
-         
+
     @Override
 	protected Unmodifiable<name>BooleanHashMap getEmptyMap()
     {
@@ -133,7 +133,7 @@ public class Unmodifiable<name>BooleanHashMapTest extends Abstract<name>BooleanH
     @Test(expected = UnsupportedOperationException.class)
     public void putDuplicateWithRemovedSlot()
     {
-        <type> collision1 = Abstract<name>BooleanHashMapTestCase.generateCollisions().getFirst();
+        <type> collision1 = Abstract<name>BooleanMapTestCase.generateCollisions().getFirst();
 
         Unmodifiable<name>BooleanHashMap hashMap = this.getEmptyMap();
         hashMap.put(collision1, true);
@@ -354,6 +354,16 @@ public class Unmodifiable<name>BooleanHashMapTest extends Abstract<name>BooleanH
         Verify.assertSize(1, this.newWithKeysValues(<(literal.(type))("1")>, true));
         Verify.assertSize(3, this.map);
     }
+
+    @Override
+    @Test
+    public void asUnmodifiable()
+    {
+        Verify.assertInstanceOf(Unmodifiable<name>BooleanHashMap.class, this.map.asUnmodifiable());
+        Assert.assertEquals(new Unmodifiable<name>BooleanHashMap(this.map), this.map.asUnmodifiable());
+        Assert.assertSame(this.map, this.map.asUnmodifiable());
+    }
+
 }
 
 >>

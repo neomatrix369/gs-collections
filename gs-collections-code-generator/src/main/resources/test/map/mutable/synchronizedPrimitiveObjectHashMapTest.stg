@@ -19,15 +19,19 @@ body(type, name) ::= <<
 
 package com.gs.collections.impl.map.mutable.primitive;
 
+import com.gs.collections.impl.test.Verify;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This file was automatically generated from template file synchronizedPrimitiveObjectHashMapTest.stg.
  * JUnit test for {@link Synchronized<name>ObjectHashMap}.
+ * This file was automatically generated from template file synchronizedPrimitiveObjectHashMapTest.stg.
  */
-public class Synchronized<name>ObjectHashMapTest extends AbstractMutable<name>ObjectHashMapTestCase
+public class Synchronized<name>ObjectHashMapTest extends AbstractMutable<name>ObjectMapTestCase
 {
+
+    private final Synchronized<name>ObjectHashMap\<String> map = this.classUnderTest();
+
     @Override
     protected Synchronized<name>ObjectHashMap\<String> classUnderTest()
     {
@@ -58,12 +62,12 @@ public class Synchronized<name>ObjectHashMapTest extends AbstractMutable<name>Ob
         return new Synchronized<name>ObjectHashMap\<T>(new <name>ObjectHashMap\<T>());
     }
 
-    private final Synchronized<name>ObjectHashMap\<String> map = this.classUnderTest();
-
     @Override
     @Test
     public void asSynchronized()
     {
+        Verify.assertInstanceOf(Synchronized<name>ObjectHashMap.class, this.map.asSynchronized());
+        Assert.assertEquals(new Synchronized<name>ObjectHashMap\<String>(this.map), this.map.asSynchronized());
         Assert.assertSame(this.map, this.map.asSynchronized());
     }
 }

@@ -26,6 +26,7 @@ import com.gs.collections.api.<name>Iterable;
 import com.gs.collections.api.Lazy<name>Iterable;
 import com.gs.collections.api.bag.primitive.Mutable<name>Bag;
 import com.gs.collections.api.block.function.primitive.<name>ToObjectFunction;
+import com.gs.collections.api.block.function.primitive.Object<name>ToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.<name>Predicate;
 import com.gs.collections.api.block.procedure.primitive.<name>Procedure;
 import com.gs.collections.api.iterator.<name>Iterator;
@@ -44,8 +45,8 @@ import com.gs.collections.impl.stack.mutable.ArrayStack;
 import net.jcip.annotations.NotThreadSafe;
 
 /**
- * This file was automatically generated from template file primitiveArrayStack.stg.
  * <name>ArrayStack is similar to {@link ArrayStack}, and is memory-optimized for <type> primitives.
+ * This file was automatically generated from template file primitiveArrayStack.stg.
  */
 @NotThreadSafe
 public final class <name>ArrayStack
@@ -251,6 +252,12 @@ public final class <name>ArrayStack
     public \<V> MutableStack\<V> collect(<name>ToObjectFunction\<? extends V> function)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().collect(function));
+    }
+
+    public \<V> V injectInto(V injectedValue, Object<name>ToObjectFunction\<? super V, ? extends V> function)
+    {
+        //TODO changed to asReversed() once added to IntIterable
+        return this.delegate.toReversed().injectInto(injectedValue, function);
     }
 
     <(arithmeticMethods.(type))(type)>

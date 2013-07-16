@@ -22,14 +22,15 @@ body(type1, type2, name1, name2) ::= <<
 
 package com.gs.collections.impl.map.mutable.primitive;
 
+import com.gs.collections.impl.test.Verify;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This file was automatically generated from template file synchronizedPrimitivePrimitiveHashMapTest.stg.
  * JUnit test for {@link Synchronized<name1><name2>HashMap}.
+ * This file was automatically generated from template file synchronizedPrimitivePrimitiveHashMapTest.stg.
  */
-public class Synchronized<name1><name2>HashMapTest extends Abstract<name1><name2>HashMapTestCase
+public class Synchronized<name1><name2>HashMapTest extends Abstract<name1><name2>MapTestCase
 {
     private final Synchronized<name1><name2>HashMap map = this.classUnderTest();
 
@@ -62,7 +63,7 @@ public class Synchronized<name1><name2>HashMapTest extends Abstract<name1><name2
     {
         return new Synchronized<name1><name2>HashMap(new <name1><name2>HashMap(4).withKeysValues(key1, value1, key2, value2, key3, value3, key4, value4));
     }
-         
+
     @Override
     protected Synchronized<name1><name2>HashMap getEmptyMap()
     {
@@ -73,6 +74,8 @@ public class Synchronized<name1><name2>HashMapTest extends Abstract<name1><name2
     @Test
     public void asSynchronized()
     {
+        Verify.assertInstanceOf(Synchronized<name1><name2>HashMap.class, this.map.asSynchronized());
+        Assert.assertEquals(new Synchronized<name1><name2>HashMap(this.map), this.map.asSynchronized());
         Assert.assertSame(this.map, this.map.asSynchronized());
     }
 }

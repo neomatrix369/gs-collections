@@ -150,6 +150,8 @@ public class UnmodifiableBooleanStackTest
         Assert.assertTrue(stack1.containsAll(true, false, true));
         MutableBooleanStack emptyStack = new UnmodifiableBooleanStack(new BooleanArrayStack());
         Assert.assertFalse(emptyStack.containsAll(true));
+        Assert.assertFalse(emptyStack.contains(true));
+        Assert.assertTrue(BooleanArrayStack.newStackWith(true).asUnmodifiable().contains(true));
     }
 
     @Test
@@ -398,6 +400,6 @@ public class UnmodifiableBooleanStackTest
     public void asSynchronized()
     {
         MutableBooleanStack stack1 = new UnmodifiableBooleanStack(BooleanArrayStack.newStackWith(true, false, true));
-        Assert.assertEquals(stack1, stack1.asSynchronized());
+        Verify.assertInstanceOf(SynchronizedBooleanStack.class, stack1.asSynchronized());
     }
 }

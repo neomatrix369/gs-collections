@@ -20,14 +20,15 @@ body(type, name) ::= <<
 
 package com.gs.collections.impl.map.mutable.primitive;
 
+import com.gs.collections.impl.test.Verify;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This file was automatically generated from template file synchronizedPrimitiveBooleanHashMapTest.stg.
  * JUnit test for {@link Synchronized<name>BooleanHashMap}.
+ * This file was automatically generated from template file synchronizedPrimitiveBooleanHashMapTest.stg.
  */
-public class Synchronized<name>BooleanHashMapTest extends Abstract<name>BooleanHashMapTestCase
+public class Synchronized<name>BooleanHashMapTest extends Abstract<name>BooleanMapTestCase
 {
     private final Synchronized<name>BooleanHashMap map = this.classUnderTest();
 
@@ -60,7 +61,7 @@ public class Synchronized<name>BooleanHashMapTest extends Abstract<name>BooleanH
     {
         return new Synchronized<name>BooleanHashMap(new <name>BooleanHashMap(4).withKeysValues(key1, value1, key2, value2, key3, value3, key4, value4));
     }
-         
+
     @Override
     protected Synchronized<name>BooleanHashMap getEmptyMap()
     {
@@ -71,6 +72,8 @@ public class Synchronized<name>BooleanHashMapTest extends Abstract<name>BooleanH
     @Test
     public void asSynchronized()
     {
+        Verify.assertInstanceOf(Synchronized<name>BooleanHashMap.class, this.map.asSynchronized());
+        Assert.assertEquals(new Synchronized<name>BooleanHashMap(this.map), this.map.asSynchronized());
         Assert.assertSame(this.map, this.map.asSynchronized());
     }
 }

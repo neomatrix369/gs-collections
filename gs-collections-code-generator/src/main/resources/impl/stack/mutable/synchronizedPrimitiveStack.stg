@@ -17,6 +17,8 @@ body(type, name) ::= <<
 package com.gs.collections.impl.stack.mutable.primitive;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.gs.collections.api.<name>Iterable;
 import com.gs.collections.api.Lazy<name>Iterable;
@@ -36,8 +38,14 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 /**
+ * A synchronized view of a {@link Mutable<name>Stack}. It is imperative that the user manually synchronize on the collection when iterating over it using the
+ * {@link <name>Iterator}, as per {@link Collections#synchronizedCollection(Collection)}.
+ * \<p>
  * This file was automatically generated from template file synchronizedPrimitiveStack.stg.
+ * \</p>
  *
+ * @see Mutable<name>Stack#asSynchronized()
+ * @see MutableStack#asSynchronized()
  * @since 3.1.
  */
 @ThreadSafe
@@ -45,7 +53,6 @@ public final class Synchronized<name>Stack
         implements Mutable<name>Stack, Serializable
 {
     private static final long serialVersionUID = 1L;
-
     private final Object lock;
     @GuardedBy("this.lock")
     private final Mutable<name>Stack stack;
@@ -165,9 +172,12 @@ public final class Synchronized<name>Stack
         }
     }
 
+    /**
+     * Must be called in a synchronized block.
+     */
     public <name>Iterator <type>Iterator()
     {
-        return this.stack.<type>Iterator();  // this must be manually synchronized by the developer
+        return this.stack.<type>Iterator();
     }
 
     public void forEach(<name>Procedure procedure)
@@ -364,7 +374,7 @@ public final class Synchronized<name>Stack
 
     public Mutable<name>Stack asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new Unmodifiable<name>Stack(this);
     }
 
     public Mutable<name>Stack asSynchronized()

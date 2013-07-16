@@ -16,21 +16,32 @@ body(type, name) ::= <<
 
 package com.gs.collections.impl.list.mutable.primitive;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.gs.collections.api.<name>Iterable;
 import com.gs.collections.api.Lazy<name>Iterable;
 import com.gs.collections.api.block.function.primitive.<name>ToObjectFunction;
 import com.gs.collections.api.block.predicate.primitive.<name>Predicate;
+import com.gs.collections.api.iterator.<name>Iterator;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.api.list.primitive.Immutable<name>List;
 import com.gs.collections.api.list.primitive.Mutable<name>List;
 import com.gs.collections.impl.collection.mutable.primitive.AbstractSynchronized<name>Collection;
+import com.gs.collections.impl.factory.primitive.<name>Lists;
 import com.gs.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 /**
+ * A synchronized view of a {@link Mutable<name>List}. It is imperative that the user manually synchronize on the collection when iterating over it using the
+ * {@link <name>Iterator}, as per {@link Collections#synchronizedCollection(Collection)}.
+ * \<p>
  * This file was automatically generated from template file synchronizedPrimitiveList.stg.
+ * \</p>
  *
+ * @see Mutable<name>List#asSynchronized()
+ * @see MutableList#asSynchronized()
  * @since 3.1.
  */
 @ThreadSafe
@@ -225,7 +236,7 @@ public final class Synchronized<name>List
 
     public Mutable<name>List asUnmodifiable()
     {
-        throw new UnsupportedOperationException("asUnmodifiable not implemented yet");
+        return new Unmodifiable<name>List(this);
     }
 
     public Mutable<name>List asSynchronized()
@@ -235,7 +246,16 @@ public final class Synchronized<name>List
 
     public Immutable<name>List toImmutable()
     {
-        throw new UnsupportedOperationException("toImmutable not implemented yet");
+        int size = this.size();
+        if (size == 0)
+        {
+            return <name>Lists.immutable.with();
+        }
+        if (size == 1)
+        {
+            return <name>Lists.immutable.with(this.getFirst());
+        }
+        return <name>Lists.immutable.with(this.toArray());
     }
 
     public Mutable<name>List reverseThis()
